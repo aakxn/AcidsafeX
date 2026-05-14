@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Risk Result | AcidSafeX</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+:root{
+
+--bg:#0f172a;
+--bg2:#111827;
+--card:#1e293b;
+--text:#f8fafc;
+--muted:#94a3b8;
+--border:rgba(255,255,255,0.08);
+
+}
+
+body.light-mode{
+
+--bg:#edf4ff;
+--bg2:#dbeafe;
+--card:#ffffff;
+--text:#0f172a;
+--muted:#475569;
+--border:rgba(0,0,0,0.08);
+
+}
+
+body{
+
+background:linear-gradient(135deg,var(--bg),var(--bg2));
+color:var(--text);
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+transition:0.4s;
+
+}
+
+/* NAVBAR */
+
+.navbar{
+
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(14px);
+padding:18px 30px;
+border-bottom:1px solid var(--border);
+
+}
+
+body.light-mode .navbar{
+
+background:rgba(255,255,255,0.75);
+
+}
+
+.navbar-brand{
+
+font-size:28px;
+font-weight:700;
+color:#38bdf8 !important;
+
+}
+
+.navbar .btn{
+
+border-radius:14px;
+padding:10px 18px;
+font-weight:600;
+transition:0.3s;
+
+}
+
+.btn-light{
+
+background:rgba(255,255,255,0.08);
+border:none;
+color:var(--text);
+
+}
+
+body.light-mode .btn-light{
+
+background:#e2e8f0;
+color:#0f172a;
+
+}
+
+.btn-primary{
+
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+border:none;
+color:white;
+
+}
+
+.btn-success{
+
+background:linear-gradient(135deg,#16a34a,#22c55e);
+border:none;
+color:white;
+
+}
+
+.btn-danger{
+
+background:linear-gradient(135deg,#dc2626,#ef4444);
+border:none;
+color:white;
+
+}
+
+.btn:hover{
+
+transform:translateY(-2px);
+
+}
+
+/* RESULT BOX */
+
+.result-box{
+
+background:rgba(255,255,255,0.06);
+border:1px solid var(--border);
+border-radius:28px;
+padding:40px;
+backdrop-filter:blur(18px);
+box-shadow:0 8px 30px rgba(0,0,0,0.18);
+
+}
+
+body.light-mode .result-box{
+
+background:rgba(255,255,255,0.92);
+
+}
+
+/* CARD */
+
+.card{
+
+background:rgba(255,255,255,0.05);
+border:1px solid var(--border);
+border-radius:24px;
+backdrop-filter:blur(16px);
+box-shadow:0 8px 25px rgba(0,0,0,0.16);
+
+}
+
+body.light-mode .card{
+
+background:rgba(255,255,255,0.92);
+
+}
+
+/* TEXT */
+
+h1,h2,h3,h4,h5,h6{
+
+color:var(--text);
+
+}
+
+p,li{
+
+color:var(--muted);
+
+}
+
+/* RISK */
+
+.risk-critical{
+
+font-size:40px;
+font-weight:700;
+color:#dc2626;
+
+}
+
+.risk-high{
+
+font-size:40px;
+font-weight:700;
+color:#ef4444;
+
+}
+
+.risk-medium{
+
+font-size:40px;
+font-weight:700;
+color:#f59e0b;
+
+}
+
+.risk-low{
+
+font-size:40px;
+font-weight:700;
+color:#22c55e;
+
+}
+
+/* COMPLIANCE */
+
+.compliance-score{
+
+font-size:30px;
+font-weight:700;
+color:#38bdf8;
+
+}
+
+/* PROGRESS */
+
+.progress{
+
+background:rgba(255,255,255,0.08);
+overflow:hidden;
+border-radius:30px;
+
+}
+
+body.light-mode .progress{
+
+background:#dbeafe;
+
+}
+
+.progress-bar{
+
+font-weight:600;
+font-size:15px;
+
+}
+
+/* BOXES */
+
+.explanation-box,
+.precaution-box{
+
+background:rgba(255,255,255,0.05);
+border:1px solid var(--border);
+border-radius:22px;
+padding:30px;
+
+}
+
+.explanation-box{
+
+border-left:5px solid #38bdf8;
+
+}
+
+.precaution-box{
+
+border-left:5px solid #f59e0b;
+
+}
+
+/* FOOTER */
+
+.footer{
+
+margin-top:60px;
+padding:25px;
+text-align:center;
+color:var(--muted);
+
+}
+
+/* THEME BUTTON */
+
+.theme-btn{
+
+width:52px;
+height:52px;
+border-radius:50%;
+position:fixed;
+bottom:25px;
+right:25px;
+border:none;
+font-size:20px;
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+color:white;
+z-index:999;
+box-shadow:0 8px 25px rgba(37,99,235,0.35);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg">
+
+<div class="container-fluid">
+
+<a class="navbar-brand" href="/dashboard">
+
+<i class="fa-solid fa-flask"></i>
+ AcidSafeX
+
+</a>
+
+<div class="d-flex flex-wrap gap-2">
+
+<a href="/dashboard" class="btn btn-light">
+
+<i class="fa-solid fa-table-columns"></i>
+ Dashboard
+
+</a>
+
+<a href="/form" class="btn btn-primary">
+
+<i class="fa-solid fa-plus"></i>
+ New Assessment
+
+</a>
+
+<a href="/history" class="btn btn-light">
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+ History
+
+</a>
+
+<a href="/logout" class="btn btn-danger">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+ Logout
+
+</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- RESULT -->
+
+<div class="container mt-5 mb-5">
+
+<div class="result-box">
+
+<div class="text-center">
+
+<h2>
+
+<i class="fa-solid fa-triangle-exclamation"></i>
+ Risk Assessment Result
+
+</h2>
+
+<p>
+
+Explainable Machine Learning-Based Industrial Acid Safety &
+Compliance Management System
+
+</p>
+
+</div>
+
+<!-- RISK -->
+
+<div class="text-center mt-5">
+
+{% if risk == "Critical" %}
+
+<div class="risk-critical">
+
+🔴 CRITICAL RISK
+
+</div>
+
+{% elif risk == "High" %}
+
+<div class="risk-high">
+
+🟠 HIGH RISK
+
+</div>
+
+{% elif risk == "Medium" %}
+
+<div class="risk-medium">
+
+🟡 MEDIUM RISK
+
+</div>
+
+{% else %}
+
+<div class="risk-low">
+
+🟢 LOW RISK
+
+</div>
+
+{% endif %}
+
+</div>
+
+<!-- COMPLIANCE -->
+
+<div class="text-center mt-4">
+
+<h4 class="compliance-score">
+
+Compliance Score: {{ compliance }}%
+
+</h4>
+
+</div>
+
+<!-- BAR -->
+
+<div class="progress mt-4" style="height:30px;">
+
+<div
+
+class="progress-bar
+{% if compliance < 40 %}
+bg-danger
+{% elif compliance < 70 %}
+bg-warning
+{% else %}
+bg-success
+{% endif %}"
+
+style="width: {{ compliance }}%;">
+
+{{ compliance }}%
+
+</div>
+
+</div>
+
+<!-- CHART -->
+
+<div class="card mt-5 p-4">
+
+<h4 class="text-center mb-4">
+
+<i class="fa-solid fa-chart-column"></i>
+ AI Parameter Impact Analysis
+
+</h4>
+
+<div style="height:500px;">
+
+<canvas id="riskChart"></canvas>
+
+</div>
+
+</div>
+
+<!-- EXPLANATION -->
+
+<div class="explanation-box mt-5">
+
+<h4>
+
+<i class="fa-solid fa-brain"></i>
+ Explainable ML Analysis
+
+</h4>
+
+<p class="mt-3">
+
+The machine learning model evaluated industrial safety parameters
+and identified the major contributing factors influencing the
+predicted acid risk level.
+
+</p>
+
+<ul class="mt-4">
+
+{% for reason in explanation %}
+
+<li>{{ reason }}</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+<!-- PRECAUTIONS -->
+
+<div class="precaution-box mt-5">
+
+<h4>
+
+<i class="fa-solid fa-shield-halved"></i>
+ Recommended Safety Precautions
+
+</h4>
+
+<ul class="mt-4">
+
+{% for tip in precautions %}
+
+<li>{{ tip }}</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+<!-- BUTTONS -->
+
+<div class="text-center mt-5">
+
+<a href="/form" class="btn btn-success btn-lg me-3">
+
+<i class="fa-solid fa-plus"></i>
+ New Assessment
+
+</a>
+
+<a href="/dashboard" class="btn btn-primary btn-lg">
+
+<i class="fa-solid fa-table-columns"></i>
+ Dashboard
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+© 2026 AcidSafeX |
+Explainable ML-Based Industrial Safety System
+
+</div>
+
+<!-- THEME BUTTON -->
+
+<button id="themeToggle" class="theme-btn">
+
+🌙
+
+</button>
+
+<script>
+
+/* -------------------------
+THEME
+------------------------- */
+
+const toggleBtn =
+document.getElementById("themeToggle");
+
+if(localStorage.getItem("theme") === "light"){
+
+document.body.classList.add("light-mode");
+
+toggleBtn.innerHTML = "☀️";
+
+}
+
+toggleBtn.addEventListener("click", function(){
+
+document.body.classList.toggle("light-mode");
+
+if(document.body.classList.contains("light-mode")){
+
+localStorage.setItem("theme","light");
+
+toggleBtn.innerHTML = "☀️";
+
+}
+
+else{
+
+localStorage.setItem("theme","dark");
+
+toggleBtn.innerHTML = "🌙";
+
+}
+
+location.reload();
+
+});
+
+
+/* -------------------------
+CHART
+------------------------- */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+const isLightMode =
+document.body.classList.contains("light-mode");
+
+const textColor =
+isLightMode ? "#0f172a" : "#f8fafc";
+
+const gridColor =
+isLightMode
+? "rgba(0,0,0,0.08)"
+: "rgba(255,255,255,0.08)";
+
+
+const featureLabels = [
+
+"Acid Type",
+"Quantity",
+"Storage Temperature",
+"Container Material",
+"Exposure Time",
+"Ventilation Quality",
+"Safety Equipment",
+"Storage Area",
+"Previous Incident"
+
+];
+
+
+const featureValues = [
+
+Number("{{ feature_importance.get('acid_type', 0) }}"),
+Number("{{ feature_importance.get('quantity', 0) }}"),
+Number("{{ feature_importance.get('storage_temperature', 0) }}"),
+Number("{{ feature_importance.get('container_material', 0) }}"),
+Number("{{ feature_importance.get('exposure_time', 0) }}"),
+Number("{{ feature_importance.get('ventilation_quality', 0) }}"),
+Number("{{ feature_importance.get('safety_equipment', 0) }}"),
+Number("{{ feature_importance.get('storage_area', 0) }}"),
+Number("{{ feature_importance.get('previous_incident', 0) }}")
+
+];
+
+
+const ctx =
+document.getElementById("riskChart").getContext("2d");
+
+
+new Chart(ctx, {
+
+type: "bar",
+
+data: {
+
+labels: featureLabels,
+
+datasets: [{
+
+label: "Impact Score",
+
+data: featureValues,
+
+backgroundColor: [
+
+"rgba(56,189,248,0.9)",
+"rgba(14,165,233,0.9)",
+"rgba(239,68,68,0.9)",
+"rgba(249,115,22,0.9)",
+"rgba(234,179,8,0.9)",
+"rgba(34,197,94,0.9)",
+"rgba(20,184,166,0.9)",
+"rgba(139,92,246,0.9)",
+"rgba(220,38,38,0.9)"
+
+],
+
+borderWidth: 2,
+borderRadius: 12
+
+}]
+
+},
+
+options: {
+
+responsive: true,
+
+maintainAspectRatio: false,
+
+plugins: {
+
+legend: {
+
+display: false
+
+}
+
+},
+
+scales: {
+
+y: {
+
+beginAtZero: true,
+
+ticks: {
+
+color: textColor
+
+},
+
+grid: {
+
+color: gridColor
+
+}
+
+},
+
+x: {
+
+ticks: {
+
+color: textColor
+
+},
+
+grid: {
+
+display: false
+
+}
+
+}
+
+}
+
+}
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

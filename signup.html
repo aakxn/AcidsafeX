@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Signup | AcidSafeX</title>
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+
+        :root{
+            --bg:#0f172a;
+            --bg2:#111827;
+            --card:#1e293b;
+            --text:#f8fafc;
+            --muted:#94a3b8;
+            --border:rgba(255,255,255,0.08);
+        }
+
+        body.light-mode{
+            --bg:#edf4ff;
+            --bg2:#dbeafe;
+            --card:#ffffff;
+            --text:#0f172a;
+            --muted:#475569;
+            --border:rgba(0,0,0,0.08);
+        }
+
+        body{
+            background: linear-gradient(135deg,var(--bg),var(--bg2));
+            color:var(--text);
+            font-family:'Segoe UI',sans-serif;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:20px;
+            transition:0.4s;
+        }
+
+        /* CARD */
+
+        .auth-card{
+            width:100%;
+            max-width:470px;
+            background:rgba(255,255,255,0.06);
+            border:1px solid var(--border);
+            border-radius:30px;
+            padding:42px;
+            backdrop-filter:blur(18px);
+            box-shadow:0 8px 30px rgba(0,0,0,0.18);
+            animation:fadeIn 0.5s ease;
+        }
+
+        body.light-mode .auth-card{
+            background:rgba(255,255,255,0.92);
+        }
+
+        /* ANIMATION */
+
+        @keyframes fadeIn{
+            from{
+                opacity:0;
+                transform:translateY(20px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        /* LOGO */
+
+        .logo-circle{
+            width:105px;
+            height:105px;
+            border-radius:50%;
+            background:linear-gradient(135deg,#2563eb,#38bdf8);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin:auto;
+            font-size:42px;
+            color:white;
+            box-shadow:0 10px 30px rgba(37,99,235,0.35);
+        }
+
+        /* TEXT */
+
+        h1,h2,h3,h4,h5,h6{
+            color:var(--text);
+        }
+
+        p,label{
+            color:var(--muted);
+        }
+
+        /* FORM */
+
+        .form-control{
+            background:rgba(255,255,255,0.05);
+            border:1px solid var(--border);
+            border-radius:15px;
+            padding:14px;
+            color:var(--text);
+            transition:0.3s;
+        }
+
+        body.light-mode .form-control{
+            background:#f8fafc;
+            color:#0f172a;
+        }
+
+        .form-control:focus{
+            border-color:#38bdf8;
+            box-shadow:0 0 0 0.2rem rgba(56,189,248,0.25);
+            background:rgba(255,255,255,0.08);
+            color:var(--text);
+        }
+
+        /* DROPDOWN */
+
+        select.form-control option{
+            background:#1e293b;
+            color:white;
+        }
+
+        body.light-mode select.form-control option{
+            background:white;
+            color:#0f172a;
+        }
+
+        /* BUTTON */
+
+        .btn-success{
+            background:linear-gradient(135deg,#2563eb,#38bdf8);
+            border:none;
+            border-radius:16px;
+            padding:14px;
+            font-size:17px;
+            font-weight:600;
+            transition:0.3s;
+            color:white;
+        }
+
+        .btn-success:hover{
+            transform:translateY(-2px);
+            opacity:0.95;
+        }
+
+        /* LINK */
+
+        .auth-link{
+            color:#38bdf8;
+            font-weight:600;
+            text-decoration:none;
+        }
+
+        .auth-link:hover{
+            text-decoration:underline;
+        }
+
+        /* THEME BUTTON */
+
+        .theme-btn{
+            width:52px;
+            height:52px;
+            border-radius:50%;
+            position:fixed;
+            bottom:25px;
+            right:25px;
+            border:none;
+            font-size:20px;
+            background:linear-gradient(135deg,#2563eb,#38bdf8);
+            color:white;
+            z-index:999;
+            box-shadow:0 8px 25px rgba(37,99,235,0.35);
+            cursor:pointer;
+        }
+
+        /* FOOTER */
+
+        .footer-text{
+            font-size:13px;
+            color:var(--muted);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="auth-card">
+
+        <!-- LOGO -->
+
+        <div class="text-center mb-4">
+
+            <div class="logo-circle">
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+
+            <h2 class="mt-4">
+                Create Account
+            </h2>
+
+            <p style="font-size:14px;">
+                Explainable Machine Learning-Based Industrial Acid Safety &
+                Compliance Management System
+            </p>
+
+        </div>
+
+        <!-- SIGNUP FORM -->
+
+        <form method="POST" action="/signup">
+
+            <!-- FLASH MESSAGES -->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+               {% if messages %}
+
+                  {% for category, message in messages %}
+
+                     <div class="alert alert-{{ category }} mb-3">
+
+                       {{ message }}
+
+                     </div>
+
+                  {% endfor %}
+
+               {% endif %}
+
+            {% endwith %}
+
+            <!-- USERNAME -->
+
+            <div class="mb-4">
+
+                <label class="mb-2">
+                    <i class="fa-solid fa-user"></i>
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    name="username"
+                    class="form-control"
+                    placeholder="Enter your username"
+                    required>
+
+            </div>
+
+            <!-- EMAIL -->
+
+            <div class="mb-4">
+
+                <label class="mb-2">
+                    <i class="fa-solid fa-envelope"></i>
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    required>
+
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="mb-4">
+
+                <label class="mb-2">
+                    <i class="fa-solid fa-lock"></i>
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Create a secure password"
+                    required>
+
+            </div>
+
+            <!-- ROLE -->
+
+            <div class="mb-4">
+
+                <label class="mb-2">
+
+                    <i class="fa-solid fa-user-shield"></i>
+                    Select Role
+
+                </label>
+
+                <select
+                    name="role"
+                    class="form-control"
+                    required>
+
+                    <option value="">
+                        Choose Role
+                    </option>
+
+                    <option value="Worker">
+                        Worker
+                    </option>
+
+                    <option value="Safety Officer">
+                        Safety Officer
+                    </option>
+
+                    <option value="Admin">
+                        Admin
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- BUTTON -->
+
+            <div class="d-grid mt-4">
+
+                <button type="submit" class="btn btn-success">
+
+                    <i class="fa-solid fa-user-check"></i>
+                    Signup
+
+                </button>
+
+            </div>
+
+        </form>
+
+        <!-- LOGIN -->
+
+        <div class="text-center mt-4">
+
+            <p>
+                Already have an account?
+
+                <a href="/" class="auth-link">
+                    Login
+                </a>
+            </p>
+
+        </div>
+
+        <!-- FOOTER -->
+
+        <div class="text-center mt-4">
+
+            <p class="footer-text">
+                Secure Industrial Acid Safety Monitoring Platform
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- THEME BUTTON -->
+
+    <button id="themeToggle" class="theme-btn">
+        🌙
+    </button>
+
+    <!-- THEME SCRIPT -->
+
+    <script>
+
+        const toggleBtn = document.getElementById("themeToggle");
+
+        if(localStorage.getItem("theme") === "light"){
+
+            document.body.classList.add("light-mode");
+            toggleBtn.innerHTML = "☀️";
+
+        }
+
+        toggleBtn.addEventListener("click", () => {
+
+            document.body.classList.toggle("light-mode");
+
+            if(document.body.classList.contains("light-mode")){
+
+                localStorage.setItem("theme","light");
+                toggleBtn.innerHTML = "☀️";
+
+            }
+            else{
+
+                localStorage.setItem("theme","dark");
+                toggleBtn.innerHTML = "🌙";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

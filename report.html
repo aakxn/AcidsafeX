@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Assessment Report | AcidSafeX</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+:root{
+
+--bg:#0f172a;
+--bg2:#111827;
+--card:#1e293b;
+--text:#f8fafc;
+--muted:#94a3b8;
+--border:rgba(255,255,255,0.08);
+
+}
+
+body.light-mode{
+
+--bg:#edf4ff;
+--bg2:#dbeafe;
+--card:#ffffff;
+--text:#0f172a;
+--muted:#475569;
+--border:rgba(0,0,0,0.08);
+
+}
+
+body{
+
+background:linear-gradient(135deg,var(--bg),var(--bg2));
+color:var(--text);
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+transition:0.4s;
+
+}
+
+/* NAVBAR */
+
+.navbar{
+
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(14px);
+padding:18px 30px;
+border-bottom:1px solid var(--border);
+
+}
+
+body.light-mode .navbar{
+
+background:rgba(255,255,255,0.75);
+
+}
+
+.navbar-brand{
+
+font-size:28px;
+font-weight:700;
+color:#38bdf8 !important;
+
+}
+
+.navbar .btn{
+
+border-radius:14px;
+padding:10px 18px;
+font-weight:600;
+
+}
+
+.btn-light{
+
+background:rgba(255,255,255,0.08);
+border:none;
+color:var(--text);
+
+}
+
+body.light-mode .btn-light{
+
+background:#e2e8f0;
+color:#0f172a;
+
+}
+
+.btn-primary{
+
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+border:none;
+
+}
+
+/* CARD */
+
+.report-card{
+
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(16px);
+border:1px solid var(--border);
+border-radius:24px;
+padding:35px;
+box-shadow:0 8px 25px rgba(0,0,0,0.18);
+
+}
+
+body.light-mode .report-card{
+
+background:rgba(255,255,255,0.92);
+
+}
+
+/* TABLE */
+
+.table{
+
+color:var(--text);
+
+}
+
+.table td,
+.table th{
+
+border-color:var(--border);
+
+}
+
+body.light-mode .table{
+
+color:#0f172a;
+
+}
+
+.section-title{
+
+font-size:24px;
+font-weight:700;
+margin-top:40px;
+margin-bottom:20px;
+color:#38bdf8;
+
+}
+
+.risk-badge{
+
+padding:12px 20px;
+border-radius:14px;
+font-weight:700;
+display:inline-block;
+font-size:18px;
+
+}
+
+.critical{
+
+background:rgba(239,68,68,0.18);
+color:#ef4444;
+
+}
+
+.high{
+
+background:rgba(249,115,22,0.18);
+color:#f97316;
+
+}
+
+.medium{
+
+background:rgba(234,179,8,0.18);
+color:#eab308;
+
+}
+
+.low{
+
+background:rgba(34,197,94,0.18);
+color:#22c55e;
+
+}
+
+.theme-btn{
+
+width:52px;
+height:52px;
+border-radius:50%;
+position:fixed;
+bottom:25px;
+right:25px;
+border:none;
+font-size:20px;
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+color:white;
+z-index:999;
+
+}
+
+.footer{
+
+margin-top:60px;
+padding:25px;
+text-align:center;
+color:var(--muted);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg">
+
+<div class="container-fluid">
+
+<a class="navbar-brand" href="/dashboard">
+
+<i class="fa-solid fa-flask"></i>
+ AcidSafeX
+
+</a>
+
+<div class="d-flex flex-wrap gap-2">
+
+<a href="/dashboard" class="btn btn-light">
+Dashboard
+</a>
+
+<a href="/history" class="btn btn-light">
+History
+</a>
+
+<button onclick="window.print()"
+class="btn btn-primary">
+
+<i class="fa-solid fa-print"></i>
+ Print / Save PDF
+
+</button>
+
+</div>
+
+</div>
+
+</nav>
+
+<div class="container mt-5">
+
+<div class="report-card">
+
+<h1 class="mb-3">
+
+<i class="fa-solid fa-file-shield"></i>
+ Industrial Safety Assessment Report
+
+</h1>
+
+<p style="color:var(--muted);">
+
+Explainable ML Based Acid Safety &
+Compliance Evaluation System
+
+</p>
+
+<hr>
+
+<div class="row mt-4">
+
+<div class="col-md-6">
+
+<p>
+<b>Assessment ID:</b>
+{{ record.id }}
+</p>
+
+<p>
+<b>Assessment Date:</b>
+{{ record.date.strftime('%Y-%m-%d %H:%M') }}
+</p>
+
+<p>
+<b>Performed By:</b>
+{{ user.username }}
+</p>
+
+<p>
+<b>User Role:</b>
+{{ user.role }}
+</p>
+
+</div>
+
+<div class="col-md-6 text-md-end">
+
+{% if record.risk_level == "Critical" %}
+
+<div class="risk-badge critical">
+
+CRITICAL RISK
+
+</div>
+
+{% elif record.risk_level == "High" %}
+
+<div class="risk-badge high">
+
+HIGH RISK
+
+</div>
+
+{% elif record.risk_level == "Medium" %}
+
+<div class="risk-badge medium">
+
+MEDIUM RISK
+
+</div>
+
+{% else %}
+
+<div class="risk-badge low">
+
+LOW RISK
+
+</div>
+
+{% endif %}
+
+<h3 class="mt-3">
+
+Compliance Score:
+{{ record.compliance_score }}%
+
+</h3>
+
+</div>
+
+</div>
+
+<div class="section-title">
+
+Industrial Parameters
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table">
+
+<tr>
+<th>Acid Type</th>
+<td>{{ record.acid_type }}</td>
+</tr>
+
+<tr>
+<th>Quantity</th>
+<td>{{ record.quantity }}</td>
+</tr>
+
+<tr>
+<th>Storage Temperature</th>
+<td>{{ record.storage_temperature }}</td>
+</tr>
+
+<tr>
+<th>Container Material</th>
+<td>{{ record.container_material }}</td>
+</tr>
+
+<tr>
+<th>Exposure Time</th>
+<td>{{ record.exposure_time }}</td>
+</tr>
+
+<tr>
+<th>Ventilation Quality</th>
+<td>{{ record.ventilation_quality }}</td>
+</tr>
+
+<tr>
+<th>Safety Equipment</th>
+<td>{{ record.safety_equipment }}</td>
+</tr>
+
+<tr>
+<th>Storage Area</th>
+<td>{{ record.storage_area }}</td>
+</tr>
+
+<tr>
+<th>Previous Incident</th>
+<td>{{ record.previous_incident }}</td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="section-title">
+
+Explainable ML Analysis
+
+</div>
+
+<ul>
+
+{% for item in explanation %}
+
+<li>{{ item }}</li>
+
+{% endfor %}
+
+</ul>
+
+<div class="section-title">
+
+Safety Recommendations
+
+</div>
+
+<ul>
+
+{% for item in precautions %}
+
+<li>{{ item }}</li>
+
+{% endfor %}
+
+</ul>
+
+<div class="section-title">
+
+Feature Importance Analysis
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+<th>Impact Score</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for key,value in feature_importance.items() %}
+
+<tr>
+
+<td>{{ key }}</td>
+
+<td>{{ value }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+© 2026 AcidSafeX |
+Explainable ML-Based Industrial Safety System
+
+</div>
+
+<button class="theme-btn" onclick="toggleTheme()">
+
+<i class="fa-solid fa-moon"></i>
+
+</button>
+
+<script>
+
+function toggleTheme(){
+
+document.body.classList.toggle("light-mode");
+
+localStorage.setItem(
+"theme",
+document.body.classList.contains("light-mode")
+? "light"
+: "dark"
+);
+
+}
+
+if(localStorage.getItem("theme")==="light"){
+
+document.body.classList.add("light-mode");
+
+}
+
+</script>
+
+</body>
+</html>

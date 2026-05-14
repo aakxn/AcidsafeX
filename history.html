@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>History | AcidSafeX</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+:root{
+
+--bg:#0f172a;
+--bg2:#111827;
+--card:#1e293b;
+--text:#f8fafc;
+--muted:#94a3b8;
+--border:rgba(255,255,255,0.08);
+
+}
+
+body.light-mode{
+
+--bg:#edf4ff;
+--bg2:#dbeafe;
+--card:#ffffff;
+--text:#0f172a;
+--muted:#475569;
+--border:rgba(0,0,0,0.08);
+
+}
+
+body{
+
+background:linear-gradient(135deg,var(--bg),var(--bg2));
+color:var(--text);
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+transition:0.4s;
+
+}
+
+/* NAVBAR */
+
+.navbar{
+
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(14px);
+padding:18px 30px;
+border-bottom:1px solid var(--border);
+
+}
+
+body.light-mode .navbar{
+
+background:rgba(255,255,255,0.75);
+
+}
+
+.navbar-brand{
+
+font-size:28px;
+font-weight:700;
+color:#38bdf8 !important;
+
+}
+
+.navbar .btn{
+
+border-radius:14px;
+padding:10px 18px;
+font-weight:600;
+transition:0.3s;
+
+}
+
+.btn-light{
+
+background:rgba(255,255,255,0.08);
+border:none;
+color:var(--text);
+
+}
+
+body.light-mode .btn-light{
+
+background:#e2e8f0;
+color:#0f172a;
+
+}
+
+.btn-primary{
+
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+border:none;
+color:white;
+
+}
+
+.btn-danger{
+
+background:linear-gradient(135deg,#dc2626,#ef4444);
+border:none;
+color:white;
+
+}
+
+.btn:hover{
+
+transform:translateY(-2px);
+
+}
+
+/* CARD */
+
+.card{
+
+background:rgba(255,255,255,0.06);
+border:1px solid var(--border);
+border-radius:24px;
+backdrop-filter:blur(16px);
+box-shadow:0 8px 25px rgba(0,0,0,0.16);
+
+}
+
+body.light-mode .card{
+
+background:rgba(255,255,255,0.92);
+
+}
+
+/* TEXT */
+
+h1,h2,h3,h4,h5,h6{
+
+color:var(--text);
+
+}
+
+p{
+
+color:var(--muted);
+
+}
+
+/* TABLE */
+
+.table{
+
+color:var(--text);
+
+}
+
+.table thead{
+
+background:rgba(255,255,255,0.06);
+
+}
+
+.table td,
+.table th{
+
+border-color:var(--border);
+
+}
+
+.table tbody tr:hover{
+
+background:rgba(255,255,255,0.04);
+
+}
+
+/* CUSTOM BADGES */
+
+.badge{
+
+padding:8px 14px;
+border-radius:30px;
+font-size:13px;
+font-weight:600;
+
+}
+
+/* FOOTER */
+
+.footer{
+
+margin-top:60px;
+padding:25px;
+text-align:center;
+color:var(--muted);
+
+}
+
+/* THEME BUTTON */
+
+.theme-btn{
+
+width:52px;
+height:52px;
+border-radius:50%;
+position:fixed;
+bottom:25px;
+right:25px;
+border:none;
+font-size:20px;
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+color:white;
+z-index:999;
+box-shadow:0 8px 25px rgba(37,99,235,0.35);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg">
+
+<div class="container-fluid">
+
+<a class="navbar-brand" href="/dashboard">
+
+<i class="fa-solid fa-flask"></i>
+ AcidSafeX
+
+</a>
+
+<div class="d-flex flex-wrap gap-2">
+
+<a href="/dashboard" class="btn btn-light">
+
+<i class="fa-solid fa-table-columns"></i>
+ Dashboard
+
+</a>
+
+<!-- ADMIN + SAFETY OFFICER ONLY -->
+
+{% if session['role'] == "Admin" or session['role'] == "Safety Officer" %}
+
+<a href="/form" class="btn btn-primary">
+
+<i class="fa-solid fa-plus"></i>
+ New Assessment
+
+</a>
+
+{% endif %}
+
+<a href="/account" class="btn btn-light">
+
+<i class="fa-solid fa-user"></i>
+ Account
+
+</a>
+
+<a href="/logout" class="btn btn-danger">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+ Logout
+
+</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- HISTORY -->
+
+<div class="container mt-5 mb-5">
+
+<div class="card p-4 p-lg-5">
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+<div>
+
+<h2>
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+ Assessment History
+
+</h2>
+
+<p>
+
+Explainable Machine Learning-Based Industrial Acid Safety &
+Compliance Management System
+
+</p>
+
+</div>
+
+<span class="badge bg-primary p-3">
+
+Total Records:
+{{ records|length }}
+
+</span>
+
+</div>
+
+<!-- TABLE -->
+
+<div class="table-responsive">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+<th>Acid Type</th>
+<th>Quantity</th>
+<th>Temperature</th>
+<th>Risk Level</th>
+<th>Compliance</th>
+<th>Date</th>
+
+{% if session['role'] == "Admin" or session['role'] == "Safety Officer" %}
+<th>Action</th>
+{% endif %}
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for record in records %}
+
+<tr>
+
+<td>
+
+<span class="badge bg-dark">
+
+#{{ record.id }}
+
+</span>
+
+</td>
+
+<td>
+
+{{ record.acid_type }}
+
+</td>
+
+<td>
+
+{{ record.quantity }}
+
+</td>
+
+<td>
+
+{{ record.storage_temperature }} °C
+
+</td>
+
+<td>
+
+{% if record.risk_level == "Critical" %}
+
+<span class="badge bg-dark">
+Critical
+</span>
+
+{% elif record.risk_level == "High" %}
+
+<span class="badge bg-danger">
+High
+</span>
+
+{% elif record.risk_level == "Medium" %}
+
+<span class="badge bg-warning text-dark">
+Medium
+</span>
+
+{% else %}
+
+<span class="badge bg-success">
+Low
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{% if record.compliance_score >= 80 %}
+
+<span class="badge bg-success">
+
+{{ record.compliance_score }}%
+
+</span>
+
+{% elif record.compliance_score >= 50 %}
+
+<span class="badge bg-warning text-dark">
+
+{{ record.compliance_score }}%
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+{{ record.compliance_score }}%
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ record.date.strftime('%Y-%m-%d') }}
+
+</td>
+
+<!-- ADMIN + SAFETY OFFICER DELETE -->
+
+{% if session['role'] == "Admin" or session['role'] == "Safety Officer" %}
+
+
+<td>
+
+<a href="/generate_report/{{ record.id }}"
+class="btn btn-primary btn-sm mb-1">
+
+<i class="fa-solid fa-file-pdf"></i>
+ Report
+
+</a>
+
+<a href="/delete_record/{{ record.id }}"
+class="btn btn-danger btn-sm">
+
+<i class="fa-solid fa-trash"></i>
+ Delete
+
+</a>
+
+</td>
+
+
+
+{% endif %}
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+© 2026 AcidSafeX |
+Explainable ML-Based Industrial Safety System
+
+</div>
+
+<!-- THEME BUTTON -->
+
+<button id="themeToggle" class="theme-btn">
+
+🌙
+
+</button>
+
+<!-- THEME SCRIPT -->
+
+<script>
+
+const toggleBtn =
+document.getElementById("themeToggle");
+
+if(localStorage.getItem("theme")==="light"){
+
+document.body.classList.add("light-mode");
+toggleBtn.innerHTML="☀️";
+
+}
+
+toggleBtn.addEventListener("click",()=>{
+
+document.body.classList.toggle("light-mode");
+
+if(document.body.classList.contains("light-mode")){
+
+localStorage.setItem("theme","light");
+toggleBtn.innerHTML="☀️";
+
+}
+
+else{
+
+localStorage.setItem("theme","dark");
+toggleBtn.innerHTML="🌙";
+
+}
+
+});
+
+</script>
+
+</body>
+</html>

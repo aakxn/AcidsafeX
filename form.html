@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Risk Assessment | AcidSafeX</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+:root{
+
+--bg:#0f172a;
+--bg2:#111827;
+--card:#1e293b;
+--text:#f8fafc;
+--muted:#94a3b8;
+--border:rgba(255,255,255,0.08);
+
+}
+
+body.light-mode{
+
+--bg:#edf4ff;
+--bg2:#dbeafe;
+--card:#ffffff;
+--text:#0f172a;
+--muted:#475569;
+--border:rgba(0,0,0,0.08);
+
+}
+
+body{
+
+background:linear-gradient(135deg,var(--bg),var(--bg2));
+color:var(--text);
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+transition:0.4s;
+
+}
+
+/* NAVBAR */
+
+.navbar{
+
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(14px);
+padding:18px 30px;
+border-bottom:1px solid var(--border);
+
+}
+
+body.light-mode .navbar{
+
+background:rgba(255,255,255,0.75);
+
+}
+
+.navbar-brand{
+
+font-size:28px;
+font-weight:700;
+color:#38bdf8 !important;
+
+}
+
+.navbar .btn{
+
+border-radius:14px;
+padding:10px 18px;
+font-weight:600;
+transition:0.3s;
+
+}
+
+.btn-light{
+
+background:rgba(255,255,255,0.08);
+border:none;
+color:var(--text);
+
+}
+
+body.light-mode .btn-light{
+
+background:#e2e8f0;
+color:#0f172a;
+
+}
+
+.btn-primary{
+
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+border:none;
+color:white;
+
+}
+
+.btn-danger{
+
+background:linear-gradient(135deg,#dc2626,#ef4444);
+border:none;
+color:white;
+
+}
+
+.btn:hover{
+
+transform:translateY(-2px);
+
+}
+
+/* CARD */
+
+.card{
+
+background:rgba(255,255,255,0.06);
+border:1px solid var(--border);
+border-radius:24px;
+backdrop-filter:blur(16px);
+box-shadow:0 8px 25px rgba(0,0,0,0.16);
+
+}
+
+body.light-mode .card{
+
+background:rgba(255,255,255,0.92);
+
+}
+
+/* TEXT */
+
+h1,h2,h3,h4,h5,h6{
+
+color:var(--text);
+
+}
+
+p,label{
+
+color:var(--muted);
+
+}
+
+/* FORM */
+
+.form-control,
+.form-select{
+
+background:rgba(255,255,255,0.05);
+border:1px solid var(--border);
+color:var(--text);
+border-radius:14px;
+padding:12px;
+transition:0.3s;
+
+}
+
+body.light-mode .form-control,
+body.light-mode .form-select{
+
+background:#f8fafc;
+
+}
+
+.form-control:focus,
+.form-select:focus{
+
+border-color:#38bdf8;
+box-shadow:0 0 0 0.2rem rgba(56,189,248,0.25);
+
+}
+
+.form-select option{
+
+background:#1e293b;
+color:white;
+
+}
+
+body.light-mode .form-select option{
+
+background:white;
+color:black;
+
+}
+
+/* SUBMIT BUTTON */
+
+.submit-btn{
+
+padding:14px;
+font-size:18px;
+font-weight:600;
+border-radius:16px;
+
+}
+
+/* FOOTER */
+
+.footer{
+
+margin-top:60px;
+padding:25px;
+text-align:center;
+color:var(--muted);
+
+}
+
+/* THEME BUTTON */
+
+.theme-btn{
+
+width:52px;
+height:52px;
+border-radius:50%;
+position:fixed;
+bottom:25px;
+right:25px;
+border:none;
+font-size:20px;
+background:linear-gradient(135deg,#2563eb,#38bdf8);
+color:white;
+z-index:999;
+box-shadow:0 8px 25px rgba(37,99,235,0.35);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg">
+
+<div class="container-fluid">
+
+<a class="navbar-brand" href="/dashboard">
+
+<i class="fa-solid fa-flask"></i>
+ AcidSafeX
+
+</a>
+
+<div class="d-flex flex-wrap gap-2">
+
+<a href="/dashboard" class="btn btn-light">
+<i class="fa-solid fa-table-columns"></i>
+ Dashboard
+</a>
+
+<!-- ONLY ADMIN + SAFETY OFFICER -->
+
+{% if session['role'] == "Admin" or session['role'] == "Safety Officer" %}
+
+<a href="/history" class="btn btn-light">
+<i class="fa-solid fa-clock-rotate-left"></i>
+ History
+</a>
+
+{% endif %}
+
+<a href="/account" class="btn btn-light">
+<i class="fa-solid fa-user"></i>
+ Account
+</a>
+
+<a href="/logout" class="btn btn-danger">
+<i class="fa-solid fa-right-from-bracket"></i>
+ Logout
+</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- FORM -->
+
+<div class="container mt-5 mb-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-11">
+
+<div class="card p-4 p-lg-5">
+
+<div class="text-center mb-5">
+
+<h2>
+<i class="fa-solid fa-triangle-exclamation"></i>
+ Acid Risk Assessment Form
+</h2>
+
+<p>
+
+Explainable Machine Learning-Based Industrial Acid Safety &
+Compliance Management System
+
+</p>
+
+</div>
+
+<form method="POST" action="/submit">
+
+<div class="row">
+
+<!-- ACID TYPE -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-flask"></i>
+ Acid Type
+</label>
+
+<select name="acid_type" class="form-select" required>
+
+<option value="">Select Acid</option>
+
+<option>Sulfuric Acid (H₂SO₄)</option>
+<option>Hydrochloric Acid (HCl)</option>
+<option>Nitric Acid (HNO₃)</option>
+<option>Acetic Acid (CH₃COOH)</option>
+<option>Phosphoric Acid (H₃PO₄)</option>
+<option>Hydrofluoric Acid (HF)</option>
+<option>Perchloric Acid (HClO₄)</option>
+<option>Formic Acid (HCOOH)</option>
+<option>Oxalic Acid (C₂H₂O₄)</option>
+<option>Boric Acid (H₃BO₃)</option>
+<option>Chromic Acid (H₂CrO₄)</option>
+<option>Citric Acid (C₆H₈O₇)</option>
+<option>Lactic Acid (C₃H₆O₃)</option>
+<option>Tartaric Acid (C₄H₆O₆)</option>
+<option>Carbonic Acid (H₂CO₃)</option>
+<option>Maleic Acid (C₄H₄O₄)</option>
+<option>Fumaric Acid (C₄H₄O₄)</option>
+<option>Benzoic Acid (C₇H₆O₂)</option>
+<option>Salicylic Acid (C₇H₆O₃)</option>
+<option>Ascorbic Acid (C₆H₈O₆)</option>
+<option>Sulfamic Acid (H₃NSO₃)</option>
+<option>Hypochlorous Acid (HClO)</option>
+<option>Chloric Acid (HClO₃)</option>
+<option>Bromic Acid (HBrO₃)</option>
+<option>Iodic Acid (HIO₃)</option>
+<option>Thiocyanic Acid (HSCN)</option>
+<option>Picric Acid (C₆H₃N₃O₇)</option>
+<option>Stearic Acid (C₁₈H₃₆O₂)</option>
+<option>Oleic Acid (C₁₈H₃₄O₂)</option>
+<option>Palmitic Acid (C₁₆H₃₂O₂)</option>
+<option>Acrylic Acid (C₃H₄O₂)</option>
+<option>Methacrylic Acid (C₄H₆O₂)</option>
+<option>Valeric Acid (C₅H₁₀O₂)</option>
+<option>Caproic Acid (C₆H₁₂O₂)</option>
+<option>Propionic Acid (C₃H₆O₂)</option>
+<option>Butyric Acid (C₄H₈O₂)</option>
+<option>Gluconic Acid (C₆H₁₂O₇)</option>
+<option>Malic Acid (C₄H₆O₅)</option>
+<option>Succinic Acid (C₄H₆O₄)</option>
+<option>Adipic Acid (C₆H₁₀O₄)</option>
+<option>Tannic Acid (C₇₆H₅₂O₄₆)</option>
+<option>Silicic Acid (H₄SiO₄)</option>
+<option>Arsenic Acid (H₃AsO₄)</option>
+<option>Selenic Acid (H₂SeO₄)</option>
+<option>Periodic Acid (HIO₄)</option>
+<option>Pyruvic Acid (C₃H₄O₃)</option>
+<option>Trifluoroacetic Acid (CF₃COOH)</option>
+<option>Dichloroacetic Acid (C₂H₂Cl₂O₂)</option>
+<option>Monochloroacetic Acid (C₂H₃ClO₂)</option>
+<option>Peracetic Acid (C₂H₄O₃)</option>
+
+</select>
+
+</div>
+
+<!-- KEEP ALL YOUR OTHER EXISTING INPUT FIELDS HERE -->
+ <!-- QUANTITY -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-weight-scale"></i>
+ Quantity (Liters)
+</label>
+
+<input
+type="number"
+name="quantity"
+class="form-control"
+placeholder="Enter quantity"
+required>
+
+</div>
+
+<!-- STORAGE TEMPERATURE -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-temperature-three-quarters"></i>
+ Storage Temperature (°C)
+</label>
+
+<input
+type="number"
+name="storage_temperature"
+class="form-control"
+placeholder="Enter storage temperature"
+required>
+
+</div>
+
+<!-- CONTAINER MATERIAL -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-box"></i>
+ Container Material
+</label>
+
+<select name="container_material" class="form-select" required>
+
+<option value="">Select Material</option>
+
+<option>Glass</option>
+<option>Borosilicate Glass</option>
+<option>HDPE Plastic</option>
+<option>PVC</option>
+<option>PTFE (Teflon-lined)</option>
+<option>Stainless Steel</option>
+<option>Carbon Steel</option>
+<option>FRP</option>
+<option>Polypropylene</option>
+<option>Ceramic Containers</option>
+
+</select>
+
+</div>
+
+<!-- EXPOSURE TIME -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-clock"></i>
+ Exposure Time (Minutes)
+</label>
+
+<input
+type="number"
+name="exposure_time"
+class="form-control"
+placeholder="Enter exposure duration"
+required>
+
+</div>
+
+<!-- VENTILATION -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-fan"></i>
+ Ventilation Quality
+</label>
+
+<select name="ventilation_quality" class="form-select" required>
+
+<option value="">Select Ventilation</option>
+
+<option>Poor</option>
+<option>Low</option>
+<option>Moderate</option>
+<option>Good</option>
+<option>High</option>
+<option>Industrial Ventilation System</option>
+<option>Fume Hood Ventilation</option>
+
+</select>
+
+</div>
+
+<!-- SAFETY EQUIPMENT -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-helmet-safety"></i>
+ Safety Equipment
+</label>
+
+<select name="safety_equipment" class="form-select" required>
+
+<option value="">Select Equipment</option>
+
+<option>Gloves</option>
+<option>Chemical-resistant Gloves</option>
+<option>Safety Goggles</option>
+<option>Face Shield</option>
+<option>Lab Coat</option>
+<option>Chemical Suit</option>
+<option>Respirator Mask</option>
+<option>Full Body Protective Suit</option>
+<option>Safety Boots</option>
+<option>Eye Wash Station Access</option>
+
+</select>
+
+</div>
+
+<!-- STORAGE AREA -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-warehouse"></i>
+ Storage Area
+</label>
+
+<select name="storage_area" class="form-select" required>
+
+<option value="">Select Storage Area</option>
+
+<option>Laboratory</option>
+<option>Chemical Storage Room</option>
+<option>Warehouse</option>
+<option>Factory Floor</option>
+<option>Outdoor Storage</option>
+<option>Underground Storage</option>
+<option>Cold Storage Unit</option>
+<option>Hazardous Material Room</option>
+
+</select>
+
+</div>
+
+<!-- PREVIOUS INCIDENT -->
+
+<div class="col-md-6 mb-4">
+
+<label class="form-label">
+<i class="fa-solid fa-fire"></i>
+ Previous Incident
+</label>
+
+<select name="previous_incident" class="form-select" required>
+
+<option value="">Select Incident</option>
+
+<option>None</option>
+<option>Acid Spill</option>
+<option>Acid Burn</option>
+<option>Fire Hazard</option>
+<option>Toxic Gas Release</option>
+<option>Container Leakage</option>
+<option>Explosion Risk</option>
+<option>Corrosion Damage</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="d-grid mt-4">
+
+<button class="btn btn-primary submit-btn">
+
+<i class="fa-solid fa-magnifying-glass-chart"></i>
+ Analyze Industrial Risk
+
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+© 2026 AcidSafeX |
+Explainable ML-Based Industrial Safety System
+
+</div>
+
+<!-- THEME BUTTON -->
+
+<button id="themeToggle" class="theme-btn">
+
+🌙
+
+</button>
+
+<!-- THEME SCRIPT -->
+
+<script>
+
+const toggleBtn =
+document.getElementById("themeToggle");
+
+if(localStorage.getItem("theme")==="light"){
+
+document.body.classList.add("light-mode");
+toggleBtn.innerHTML="☀️";
+
+}
+
+toggleBtn.addEventListener("click",()=>{
+
+document.body.classList.toggle("light-mode");
+
+if(document.body.classList.contains("light-mode")){
+
+localStorage.setItem("theme","light");
+toggleBtn.innerHTML="☀️";
+
+}
+
+else{
+
+localStorage.setItem("theme","dark");
+toggleBtn.innerHTML="🌙";
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
